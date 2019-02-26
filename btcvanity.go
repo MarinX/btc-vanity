@@ -1,5 +1,9 @@
 package btcvanity
 
+import (
+	"github.com/btcsuite/btcd/chaincfg"
+)
+
 // BTCVanity library holder
 type BTCVanity struct {
 	config *Config
@@ -21,7 +25,14 @@ func (b *BTCVanity) Find(pattern string) (IWallet, error) {
 
 	cWallet := make(chan IWallet, b.config.Threads)
 	cErr := make(chan error)
-	btcWorker := &worker{generator: &Generator{}}
+	var chainParams *chaincfg.Params
+	if b.config.TestNet {
+		chainParams = &chaincfg.TestNet3Params
+	} else {
+		chainParams = &chaincfg.MainNetParams
+	}
+
+	btcWorker := &worker{generator: &Generator{params: chainParams}}
 
 loop:
 	for {
