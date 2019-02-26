@@ -1,14 +1,12 @@
 package btcvanity
 
 type worker struct {
-	generator *Generator
-	result    chan IWallet
-	err       chan error
+	gen IGenerator
 }
 
 // Work generates bitcoin wallet and pushes through channel
 func (w *worker) Work(result chan IWallet, erri chan error) {
-	wallet, err := w.generator.Generate()
+	wallet, err := w.gen.Generate()
 	if err != nil {
 		erri <- err
 		return
