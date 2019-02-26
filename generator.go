@@ -12,6 +12,11 @@ type Generator struct {
 	params *chaincfg.Params
 }
 
+// IGenerator is interface for generator
+type IGenerator interface {
+	Generate() (IWallet, error)
+}
+
 // Generate generates bitcoin wallet interface
 func (g *Generator) Generate() (IWallet, error) {
 	wallet := &Wallet{}
