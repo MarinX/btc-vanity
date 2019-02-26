@@ -9,7 +9,7 @@ import (
 func TestBTCVanity(t *testing.T) {
 
 	b := New(&Config{
-		Threads: 5,
+		Buffer: 5,
 	})
 
 	wallet, err := b.Find("ab")

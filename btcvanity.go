@@ -23,7 +23,7 @@ func (b *BTCVanity) Find(pattern string) (IWallet, error) {
 	var resWallet IWallet
 	var resError error
 
-	cWallet := make(chan IWallet, b.config.Threads)
+	cWallet := make(chan IWallet, b.config.Buffer)
 	cErr := make(chan error)
 	var chainParams *chaincfg.Params
 	if b.config.TestNet {
