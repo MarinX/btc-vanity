@@ -32,7 +32,7 @@ func (b *BTCVanity) Find(pattern string) (IWallet, error) {
 		chainParams = &chaincfg.MainNetParams
 	}
 
-	btcWorker := &worker{generator: &Generator{params: chainParams}}
+	btcWorker := &worker{gen: &Generator{params: chainParams}}
 
 loop:
 	for {
