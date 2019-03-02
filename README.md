@@ -44,7 +44,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/MarinX/btcvanity"
+	"github.com/MarinX/btc-vanity"
 )
 
 func main() {
