@@ -5,11 +5,12 @@ type worker struct {
 }
 
 // Work generates bitcoin wallet and pushes through channel
-func (w *worker) Work(result chan IWallet, erri chan error) {
+func (w *worker) Work() (result IWallet, erri error) {
 	wallet, err := w.gen.Generate()
 	if err != nil {
-		erri <- err
+		erri = err
 		return
 	}
-	result <- wallet
+	result = wallet
+	return
 }

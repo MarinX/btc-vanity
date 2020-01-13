@@ -1,6 +1,8 @@
 package btcvanity
 
 import (
+	"sync"
+
 	"github.com/btcsuite/btcd/chaincfg"
 )
 
@@ -23,8 +25,6 @@ func (b *BTCVanity) Find(pattern string) (IWallet, error) {
 	var resWallet IWallet
 	var resError error
 
-	cWallet := make(chan IWallet, b.config.Buffer)
-	cErr := make(chan error)
 	var chainParams *chaincfg.Params
 	if b.config.TestNet {
 		chainParams = &chaincfg.TestNet3Params
@@ -34,30 +34,33 @@ func (b *BTCVanity) Find(pattern string) (IWallet, error) {
 
 	btcWorker := &worker{gen: &Generator{params: chainParams}}
 
-loop:
-	for {
-		select {
-		case wallet := <-cWallet:
-			if isMatch(pattern, wallet.PublicKey()) {
-				resWallet = wallet
-				break loop
+	mutex := sync.Mutex{}
+	for i := 0; i < b.config.Buffer; i++ {
+		go func() {
+			for {
+				wallet, err := btcWorker.Work()
+				if err != nil {
+					mutex.Lock()
+					resError = err
+					break
+				}
+				if isMatch(pattern, wallet.PublicKey()) {
+					mutex.Lock()
+					if resWallet != nil {
+						break
+					}
+					resWallet = wallet
+					break
+				}
 			}
-			break
 
-		case err := <-cErr:
-			resError = err
-			break loop
-
-		case <-b.stop:
-			break loop
-
-		default:
-			btcWorker.Work(cWallet, cErr)
-		}
+			b.stop <- true
+			mutex.Unlock()
+		}()
 	}
 
-	close(cWallet)
-	close(cErr)
+	<-b.stop
+
 	return resWallet, resError
 }
 

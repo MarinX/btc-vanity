@@ -36,7 +36,7 @@ The frequency of a vanity pattern (1KidsCharity) and average time-to-find on a d
 go get github.com/MarinX/btc-vanity
 ```
 
-#### Example
+#### Use it as library
 
 ```go
 package main
@@ -72,6 +72,19 @@ func main() {
 	fmt.Printf("PRIVATE KEY\n%s\n", address.PrivateKey())
 }
 
+```
+
+#### Use it as a CLI tool
+```sh
+go get github.com/MarinX/btc-vanity/cmd/btcvanity
+```
+```sh
+Usage: ./btcvanity [OPTIONS] pattern
+Example: ./btcvanity Kid
+  -testnet
+        Use testnet
+  -threads int
+        How many threads you want to spawn (default 16)
 ```
 
 ## Tests
