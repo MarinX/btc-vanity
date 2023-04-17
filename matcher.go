@@ -6,5 +6,5 @@ import "strings"
 func isMatch(pattern string, addr string) bool {
 	addr = strings.ToLower(addr[1 : len(addr)-1])
 	pattern = strings.ToLower(pattern)
-	return strings.HasPrefix(addr, pattern)
+	return strings.HasSuffix(addr, pattern)
 }
